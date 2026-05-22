@@ -11,96 +11,118 @@ pinned: false
 
 # 🌟 GitHub Star Predictor
 
-An interactive, production-ready machine learning application that predicts a GitHub repository's stargazers (popularity) using a leakage-free **LightGBM** model combined with **Sentence Embeddings** (`all-MiniLM-L6-v2`) and rich developer reputation features.
+<p align="center">
+  <img src="project_thumbnail.png" alt="GitHub Star Predictor Cover" width="650" style="border-radius: 16px; box-shadow: 0 10px 35px rgba(139, 92, 246, 0.4);">
+</p>
 
-Deployable locally as a premium **Streamlit** dashboard, this project features dynamic on-the-fly feature engineering, a comprehensive leakage audit demonstration, and live API integration with GitHub.
+<p align="center">
+  <a href="https://huggingface.co/spaces/swamimanish/Github-star-predictor" target="_blank">
+    <img src="https://img.shields.io/badge/%F0%9F%A5%97%20Hugging%20Face-Live%20Demo-blueviolet?style=for-the-badge&logo=huggingface" alt="Live Demo on Hugging Face Spaces">
+  </a>
+  <a href="https://github.com/swamimanish/Github-star-predictor" target="_blank">
+    <img src="https://img.shields.io/badge/GitHub-Repository-black?style=for-the-badge&logo=github" alt="GitHub Repository">
+  </a>
+</p>
 
 ---
 
-## 🚀 Key Features
-
-*   **🔍 Auto-Fetch via GitHub URL:** Paste any public GitHub URL (e.g. `https://github.com/django/django`). The app automatically fetches real-time metadata, queries the owner's profile to compute their global reputation score, downloads the description, and outputs a star prediction.
-*   **✍️ Manual Sandbox Mode:** Design your own unpublished repository! Experiment with different README summaries, sizes, programming languages, and active issues to see popularity projections before push.
-*   **🤖 On-the-fly NLP Embeddings:** Instantly generates a **384-dimensional sentence embedding** of the repository's description using `SentenceTransformer` to capture the semantic complexity of its documentation.
-*   **📈 Structural Decomposition:** Visualizes feature category influence (Owner Reputation, Velocity, Metadata, Embeddings) using high-fidelity **Plotly** indicators.
-*   **🔬 Rigorous Leakage Audit:** A educational dashboard that showcases the Week 5 data science victory—resolving the target-leakage bug and establishing a robust, leakage-free CV score.
+### 🔗 Try the Live App Immediately!
+> **No installation or coding required!** You can play with the live machine learning model, fetch real-time GitHub repositories, or design your own hypothetical project right now in your web browser:
+> ### 👉 [Click Here to Open the Live App on Hugging Face Spaces!](https://huggingface.co/spaces/swamimanish/Github-star-predictor) 🌟
 
 ---
 
-## 🛠️ Installation & Quickstart
+## 💡 What is the GitHub Star Predictor?
 
-To run the Streamlit app locally, follow these simple steps:
+Have you ever wondered what makes some software projects on GitHub go viral, while others remain undiscovered? 
 
-### 1. Clone & Set Up Environment
+The **GitHub Star Predictor** is a smart, interactive tool powered by artificial intelligence. It acts like a crystal ball for developers, product managers, and open-source enthusiasts. By evaluating **416 distinct data points**, the app estimates the total number of stargazers (popularity/likes) a repository is expected to receive based on its structural characteristics!
+
+---
+
+## 🎨 How it Works (Simply Explained)
+
+Instead of just guessing, our AI looks at a project the way a human reviewer would:
+
+1.  **👤 Creator Reputation (Success History):** Has the owner created popular repositories in the past? Do they have a loyal following? A developer with high historical engagement naturally gives a new project a massive headstart.
+2.  **📝 Pitch & Documentation Quality (AI NLP):** We use a advanced language model to read the repository's description. The AI analyzes keywords, readability, and structural elements to determine how engaging and clear the documentation is.
+3.  **⚡ Project Growth Speed (Velocity):** We check safe growth metrics—like how active the project is relative to its age (e.g., issues and forks opened per day).
+4.  **🏷️ Trendy Topics:** Does the project mention high-demand modern keywords like **AI, LLM, RAG, React, or DevOps**?
+
+---
+
+## 🚀 How to Use the App
+
+The dashboard offers two simple, interactive modes:
+
+### 🔍 Mode 1: Auto-Fetch via GitHub URL
+*   **What it does:** Paste the link to any public GitHub repository (e.g., `https://github.com/django/django`).
+*   **The magic:** The app automatically queries the live GitHub API, downloads the owner's history, analyzes the description, runs it through the AI, and outputs a predicted star rating. 
+*   **Comparison:** It compares the AI's estimate to the actual current star count, showing whether the project is overperforming, on-track, or underperforming!
+
+### ✍️ Mode 2: Manual Sandbox Mode (Design Your Own!)
+*   **What it does:** Let your imagination run wild! Fill in a hypothetical repository name, choose a primary language, slide its age and size, and write a custom README summary.
+*   **The magic:** Watch in real-time how changing a description or selecting a trendy topic affects your project's popularity score *before* you even publish it!
+
+---
+
+## 🛠️ Installation & Local Setup (For Developers)
+
+If you are a developer and want to run the app locally on your machine, follow these steps:
+
+### 1. Clone & Navigate to Folder
 ```bash
 # Clone the repository
-git clone https://github.com/manishswami1114/Github-star-predictor.git
+git clone https://github.com/swamimanish/Github-star-predictor.git
 cd Github-star-predictor
+```
 
-# Create and activate a virtual environment
+### 2. Set Up a Virtual Environment
+```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
 
-### 2. Install Dependencies
+### 3. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Run the Streamlit Dashboard
+### 4. Run the Streamlit Dashboard
 ```bash
 streamlit run src/streamlit_app.py
 ```
 
 ---
 
-## 📊 Machine Learning Pipeline & Architecture
+## 🔬 Behind the Scenes (The Technical Specs)
 
-The prediction engine is trained on **416 features** split into 5 core groups:
+For the data scientists and developers, here is the technical breakdown of our ML pipeline:
 
-1.  **Repository Metadata (5):** Age (days since creation), open issues, fork count, size in KB, and primary programming language.
-2.  **README NLP Embeddings (384):** Semantic representations computed via the pretrained transformer `all-MiniLM-L6-v2` to evaluate documentation quality and keywords.
-3.  **Owner Reputation (12):** Historical success metrics including the owner's total stargazers across other repositories, standard deviation of stars, success rate (repos with >100 stars), and account tenure.
-4.  **Topic Flags (11):** Binary flags for viral/trending keywords (e.g., `ai_llm`, `rag`, `k8s`, `react`, `pytorch`).
-5.  **Velocity Metrics (4):** Safe, target-leakage free indicators tracking activity rate (e.g., `forks_per_day` and `issues_per_day`).
+*   **Tree Ensembles (LightGBM):** Built using an optimized LightGBM model utilizing 416 handcrafted features trained on standard RMSLE loss.
+*   **Sentence Transformers (`all-MiniLM-L6-v2`):** Used to compute a **384-dimensional dense vector representation** of README files to capture semantic structure offline/online.
+*   **Anti-Leakage Audit:** A core victory in our Week 5 milestone was solving the **Target Leakage Trap**. By removing direct star-based velocity features (e.g., `stars_per_day`), we resolved artificial overfitting (which yielded an unrealistic 0.1491 RMSLE) and achieved a highly generalizable and robust **Mean CV RMSLE of 0.5824**—perfect for predicting emerging projects!
 
----
-
-## 🔬 Leakage Audit & Validation Results
-
-During Week 5 model training, our team discovered that inclusion of direct star-related speed features (e.g., `stars_per_day`) caused a **Target Leakage Trap**, resulting in an artificially inflated validation score of **0.1491 RMSLE**. 
-
-By auditing the data leakage and training a clean, leakage-free model:
-*   We removed all leaked features.
-*   We engineered clean, proxy velocity metrics.
-*   We achieved a robust, production-generalizable **Mean CV RMSLE of 0.5824**, proving the model's reliability in predicting yet-to-be-published or emerging repositories.
-
-### Model Iteration History
-*   **Metadata Baseline:** `0.6921 RMSLE`
-*   **Metadata + NLP Embeddings:** `0.6639 RMSLE`
-*   **Production Model (Clean, Leak-Free):** `0.5824 RMSLE` (🎯 *Within target range!*)
-
----
-
-## 📂 Project Structure
-
+### 📂 File Structure
 ```
 Github-star-predictor/
 ├── src/
-│   └── streamlit_app.py        # Premium Streamlit Dashboard App
-├── requirements.txt            # Python dependencies
-├── README.md                   # Project documentation
+│   └── streamlit_app.py        # Interactive Premium Streamlit App
 ├── results/
-│   ├── final_model_clean.pkl   # Leakage-free LightGBM Model (67MB)
+│   ├── final_model_clean.pkl   # Leakage-Free LightGBM Model (67MB)
 │   ├── final_model.pkl         # Leaked LightGBM Model (104MB, tracked via LFS)
 │   └── feature_importance_final_clean.csv
-├── main/
-│   ├── src/                    # Feature engineering and training scripts
-│   └── deployment/             # Deployment testing environment
-└── data/                       # Local database & source data (Git ignored)
+├── requirements.txt            # Python dependencies
+├── README.md                   # Beautiful documentation & Space YAML metadata
+├── project_thumbnail.png       # Sleek 3D cover art
+├── push.sh                     # Helper script to sync GitHub
+└── deploy_hf.sh                # Helper script to deploy directly to Hugging Face
 ```
 
 ---
 
 ## 🔑 GitHub Personal Access Token (PAT)
-For standard usage, the app requests unauthenticated data from GitHub (limited to 60 requests/hour). If you experience rate limits, paste a standard **Personal Access Token** in the Sidebar to increase the ceiling to 5,000 requests/hour! No permissions are required for the token (read-only public repository access is default).
+The app uses public GitHub API requests by default (limited to 60/hour). If you hit rate limits, paste your read-only **Personal Access Token** in the Sidebar to increase your ceiling to 5,000 requests/hour instantly.
+
+---
+Created with ❤️ by **Manish Swami**. Live at [Hugging Face Spaces](https://huggingface.co/spaces/swamimanish/Github-star-predictor).
