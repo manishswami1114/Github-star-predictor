@@ -5,7 +5,7 @@ colorFrom: indigo
 colorTo: purple
 sdk: streamlit
 sdk_version: 1.35.0
-app_file: app.py
+app_file: streamlit_app.py
 pinned: false
 ---
 
@@ -49,7 +49,7 @@ pip install -r requirements.txt
 
 ### 3. Run the Streamlit Dashboard
 ```bash
-streamlit run app.py
+streamlit run streamlit_app.py
 ```
 
 ---
@@ -86,7 +86,7 @@ By auditing the data leakage and training a clean, leakage-free model:
 
 ```
 Github-star-predictor/
-├── app.py                      # Premium Streamlit Dashboard App
+├── streamlit_app.py            # Premium Streamlit Dashboard App
 ├── requirements.txt            # Python dependencies
 ├── README.md                   # Project documentation
 ├── results/
