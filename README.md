@@ -1,3 +1,14 @@
+---
+title: Github Star Predictor
+emoji: ⭐
+colorFrom: indigo
+colorTo: purple
+sdk: streamlit
+sdk_version: 1.35.0
+app_file: app.py
+pinned: false
+---
+
 # 🌟 GitHub Star Predictor
 
 An interactive, production-ready machine learning application that predicts a GitHub repository's stargazers (popularity) using a leakage-free **LightGBM** model combined with **Sentence Embeddings** (`all-MiniLM-L6-v2`) and rich developer reputation features.

@@ -404,7 +404,7 @@ with st.sidebar:
     if emb_model is None:
         st.caption(f"Status: {emb_status}")
     st.markdown("---")
-    st.caption("Created with ❤️ by Antigravity AI")
+    st.caption("Created by Manish Swami")
 
 # Main Header
 st.markdown("<h1 class='glow-title'>⭐ GitHub Star Predictor</h1>", unsafe_allow_html=True)
@@ -414,13 +414,10 @@ if model is None:
     st.error("🚨 Trained LightGBM model not found at `results/final_model_clean.pkl`. Please train the model first or verify the file exists.")
     st.stop()
 
-# Tab setup
-tab_predict, tab_audit = st.tabs(["🚀 Popularity Predictor", "🔬 Methodology & Leakage Audit"])
-
 # =============================================================================
-# TAB 1: PREDICTOR
+# PREDICTOR
 # =============================================================================
-with tab_predict:
+if True:
     # Selector for Input Mode
     mode = st.radio("Choose Input Method:", 
                     ["🔍 Auto-Fetch via GitHub URL", "✍️ Manual Sandbox Mode"], 
@@ -433,7 +430,7 @@ with tab_predict:
         with col_url:
             repo_url = st.text_input("GitHub Repository URL:", 
                                      placeholder="e.g., https://github.com/django/django",
-                                     value="https://github.com/manishswami1114/Github-star-predictor.git" if "url_val" not in st.session_state else st.session_state.url_val)
+                                     value="" if "url_val" not in st.session_state else st.session_state.url_val)
         with col_btn:
             st.markdown("<div style='height:28px;'></div>", unsafe_allow_html=True)
             fetch_btn = st.button("Fetch & Predict", use_container_width=True, type="primary")
@@ -659,7 +656,7 @@ with tab_predict:
             'Detail': [
                 f"Stars ({owner_total:,.0f}), Success Rate ({repo_info.get('owner_stats', {}).get('owner_success_rate', 0)*100:.1f}%)",
                 f"Forks/day ({repo_info.get('forks_count', 0)/max(age, 1):.2f}), Issues/day ({repo_info.get('open_issues_count', 0)/max(age, 1):.2f})",
-                f"Description: '{desc_text[:40]}...'",
+                f"Description: '{repo_info.get('description', '')[:40]}...'",
                 f"Language: {repo_info.get('language')}, Size: {repo_info.get('size', 0)/1024:.1f} MB"
             ]
         })
@@ -691,93 +688,4 @@ with tab_predict:
         )
         st.plotly_chart(fig_bar, use_container_width=True)
 
-# =============================================================================
-# TAB 2: METHODOLOGY & LEAKAGE AUDIT
-# =============================================================================
-with tab_audit:
-    st.markdown("""
-    <div class="glass-card">
-        <h3>🔬 Rigorous Data Science: The Leakage Audit</h3>
-        <p style="color: #d1d5db; font-size: 1.05rem;">
-            In predictive modeling, <b>Target Leakage</b> occurs when features are included that contain information about the target variable that would not be available at prediction time.
-        </p>
-        <div class="leakage-banner">
-            <h5 style="color: #f87171; margin: 0 0 5px 0; font-weight: 700;">⚠️ THE WEEK 5 LEAKAGE TRAP</h5>
-            <p style="color: #fca5a5; margin: 0; font-size: 0.95rem;">
-                During model training in Week 5, adding velocity features like <code>stars_per_day</code> and ratios like <code>fork_to_star_ratio</code> produced an artificially perfect score of <b>0.1491 RMSLE</b>. 
-                This occurred because the models were using the target (stargazers count) to predict the target! This would collapse in production when predicting stars for new repositories.
-            </p>
-        </div>
-        <p style="color: #d1d5db; font-size: 1.05rem;">
-            By performing a comprehensive <b>Leakage Audit</b>, we removed all leaked star features and engineered clean, leak-free replacements (such as <code>forks_per_day</code> and <code>owner_mean_stars</code>). 
-            This achieved a realistic, mathematically sound <b>0.58 CV RMSLE</b>, which represents highly stable, production-ready generalization.
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    col_aud1, col_aud2 = st.columns(2)
-    
-    with col_aud1:
-        st.markdown("<div class='glass-card'><h4>Model Iteration Progress</h4>", unsafe_allow_html=True)
-        # Performance progress chart
-        perf_data = pd.DataFrame({
-            'Pipeline Phase': ['Baseline (Metadata)', 'Week 3 (Embeddings)', 'Week 5 (Leaked)', 'Week 5 (Clean - Real)'],
-            'RMSLE (Lower is Better)': [0.6921, 0.6639, 0.1491, 0.5824],
-            'Type': ['Real Baseline', 'Real Progress', 'Artificial (Leaked)', 'Production Ready']
-        })
-        fig_perf = px.bar(
-            perf_data, 
-            x='Pipeline Phase', 
-            y='RMSLE (Lower is Better)',
-            color='Type',
-            color_discrete_map={
-                'Real Baseline': '#9ca3af',
-                'Real Progress': '#60a5fa',
-                'Artificial (Leaked)': '#f87171',
-                'Production Ready': '#10b981'
-            },
-            text='RMSLE (Lower is Better)'
-        )
-        fig_perf.update_layout(
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)',
-            font={'color': '#ffffff', 'family': 'Plus Jakarta Sans'},
-            height=300,
-            margin=dict(l=10, r=10, t=10, b=10),
-            yaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.05)'),
-            xaxis=dict(showgrid=False)
-        )
-        fig_perf.update_traces(textposition='outside')
-        st.plotly_chart(fig_perf, use_container_width=True)
-        st.markdown("</div>", unsafe_allow_html=True)
-        
-    with col_aud2:
-        st.markdown("<div class='glass-card'><h4>Global Feature Importance (Clean Model)</h4>", unsafe_allow_html=True)
-        # Load clean feature importance
-        if importance_df is not None:
-            top_features = importance_df.head(15).copy()
-            # Clean feature names for clean rendering
-            top_features['feature'] = top_features['feature'].apply(lambda x: f"{x[:18]}..." if len(x) > 18 else x)
-            fig_imp = px.bar(
-                top_features,
-                x='pct',
-                y='feature',
-                orientation='h',
-                color='pct',
-                color_continuous_scale='Bluered_r',
-                labels={'pct': 'Gain Importance (%)', 'feature': 'Feature Name'}
-            )
-            fig_imp.update_layout(
-                paper_bgcolor='rgba(0,0,0,0)',
-                plot_bgcolor='rgba(0,0,0,0)',
-                font={'color': '#ffffff', 'family': 'Plus Jakarta Sans'},
-                coloraxis_showscale=False,
-                height=300,
-                margin=dict(l=10, r=10, t=10, b=10),
-                xaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.05)'),
-                yaxis=dict(showgrid=False)
-            )
-            st.plotly_chart(fig_imp, use_container_width=True)
-        else:
-            st.warning("Feature importance CSV not found.")
-        st.markdown("</div>", unsafe_allow_html=True)
+

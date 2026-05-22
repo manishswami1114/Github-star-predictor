@@ -3,13 +3,16 @@ echo "=== Git Push Helper ==="
 echo "Initializing Git LFS..."
 git lfs install
 
+echo "Configuring GitHub Remote..."
+git remote set-url origin https://github.com/swamimanish/Github-star-predictor.git 2>/dev/null || git remote add origin https://github.com/swamimanish/Github-star-predictor.git
+
 echo "Staging files..."
 git add .
 
 echo "Committing files..."
-git commit -m "feat: Add interactive Streamlit app, leakage-free model, and Git LFS config"
+git commit -m "feat: Update app for HF Spaces, adjust UI, and configure git remote"
 
-echo "Pushing to GitHub..."
+echo "Pushing to GitHub (swamimanish/Github-star-predictor)..."
 git push -u origin main --force
 
 echo "=== Git Push Complete! ==="

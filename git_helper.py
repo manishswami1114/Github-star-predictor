@@ -13,29 +13,32 @@ def run_cmd(cmd):
 def main():
     print("=== GIT HELPER (UNSANDBOXED) ===")
     
-    # 1. git status
+    # 1. Update remote URL
+    print("\nUpdating remote URL to swamimanish/Github-star-predictor...")
+    # Try set-url first, if it fails, add origin
+    if not run_cmd(["git", "remote", "set-url", "origin", "https://github.com/swamimanish/Github-star-predictor.git"]):
+        run_cmd(["git", "remote", "add", "origin", "https://github.com/swamimanish/Github-star-predictor.git"])
+        
+    # 2. git status
     if not run_cmd(["git", "status"]):
         sys.exit(1)
         
-    # 2. git add
+    # 3. git add
     print("\nStaging files...")
     if not run_cmd(["git", "add", "."]):
         sys.exit(1)
         
-    # 3. git commit
+    # 4. git commit
     print("\nCommitting files...")
-    # Check if there is anything to commit
     res = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True)
     if not res.stdout.strip():
         print("Nothing to commit, working tree clean.")
     else:
-        if not run_cmd(["git", "commit", "-m", "feat: Add interactive Streamlit app, leakage-free model, and Git LFS config"]):
+        if not run_cmd(["git", "commit", "-m", "feat: Update app for HF Spaces, adjust UI, and configure git remote"]):
             sys.exit(1)
             
-    # 4. git push
+    # 5. git push
     print("\nPushing to GitHub remote...")
-    # Attempting to push to remote main branch
-    # If the user needs credential prompt, they will see it or ssh-agent will handle it.
     run_cmd(["git", "push", "-u", "origin", "main", "--force"])
 
 if __name__ == "__main__":
