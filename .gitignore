@@ -1,0 +1,13 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Caches and internal tools
+.DS_Store
+.hf_cache/
+.ipynb_checkpoints/
+*.log
+
+# Large Datasets (697MB, too large for GitHub)
+data/
