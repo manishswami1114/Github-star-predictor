@@ -3,7 +3,7 @@ echo "=== Hugging Face Spaces Deployer ==="
 read -p "Enter your Hugging Face Username (default: swamimanish): " hf_user
 hf_user=${hf_user:-swamimanish}
 
-read -p "Enter your Hugging Face Space Name (default: github-star-predictor): " hf_space
+read -p "Enter your Hugging Face Space Name (default: Github-star-predictor): " hf_space
 hf_space=${hf_space:-Github-star-predictor}
 
 read -sp "Enter your Hugging Face Write Token (get from https://huggingface.co/settings/tokens): " hf_token

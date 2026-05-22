@@ -119,8 +119,8 @@ def load_prediction_model():
     
     if not model_path.exists():
         # Look in workspace relative paths if run in a different directory structure
-        model_path = Path(__file__).parent / "results" / "final_model_clean.pkl"
-        importance_path = Path(__file__).parent / "results" / "feature_importance_final_clean.csv"
+        model_path = Path(__file__).parent.parent / "results" / "final_model_clean.pkl"
+        importance_path = Path(__file__).parent.parent / "results" / "feature_importance_final_clean.csv"
         
     model = None
     if model_path.exists():
@@ -137,7 +137,7 @@ def load_prediction_model():
 def load_embedding_model():
     """Load the sentence-transformers model inside the custom HF cache."""
     # Setup cache directory override to match week3
-    PROJECT_ROOT = Path(__file__).resolve().parent
+    PROJECT_ROOT = Path(__file__).resolve().parent.parent
     CACHE_DIR = PROJECT_ROOT / ".hf_cache"
     os.environ['HF_HOME'] = str(CACHE_DIR)
     os.environ['TRANSFORMERS_CACHE'] = str(CACHE_DIR)
